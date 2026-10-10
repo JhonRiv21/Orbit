@@ -1,0 +1,42 @@
+name: Orbital elements ingest
+
+# Every 3 hours, off the top of the hour. CelesTrak publishes new elements every
+# 2 hours and the endpoint itself skips any run within 2 hours of the last good
+# one, so a late or doubled trigger never downloads the same data twice.
+on:
+  schedule:
+    - cron: "17 */3 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check configuration
+        id: check
+        env:
+          ORBIT_URL: ${{ secrets.ORBIT_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$ORBIT_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "::warning::ORBIT_URL and/or CRON_SECRET secrets are missing. Ingest skipped."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Trigger ingest
+        if: steps.check.outputs.ready == 'true'
+        env:
+          ORBIT_URL: ${{ secrets.ORBIT_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          # The body is discarded: the repository is public and an error
+          # response could carry database details.
+          code=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 90 \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "${ORBIT_URL%/}/api/cron/ingest")
+          echo "HTTP $code"
+          test "$code" = "200"

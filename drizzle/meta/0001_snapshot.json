@@ -1,0 +1,242 @@
+{
+  "id": "9515510b-e9c1-49d6-abf3-6c61689fce05",
+  "prevId": "8725950b-1120-4263-a1b3-9211071693b6",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "orbit.ingest_runs": {
+      "name": "ingest_runs",
+      "schema": "orbit",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "finished_at": {
+          "name": "finished_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'running'"
+        },
+        "fetched": {
+          "name": "fetched",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "upserted": {
+          "name": "upserted",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "removed": {
+          "name": "removed",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "error": {
+          "name": "error",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "ingest_runs_started_at_idx": {
+          "name": "ingest_runs_started_at_idx",
+          "columns": [
+            {
+              "expression": "started_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "orbit.satellites": {
+      "name": "satellites",
+      "schema": "orbit",
+      "columns": {
+        "norad_id": {
+          "name": "norad_id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "intl_designator": {
+          "name": "intl_designator",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "orbit_class": {
+          "name": "orbit_class",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "epoch": {
+          "name": "epoch",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mean_motion": {
+          "name": "mean_motion",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "eccentricity": {
+          "name": "eccentricity",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "inclination": {
+          "name": "inclination",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "raan": {
+          "name": "raan",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "arg_pericenter": {
+          "name": "arg_pericenter",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mean_anomaly": {
+          "name": "mean_anomaly",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bstar": {
+          "name": "bstar",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mean_motion_dot": {
+          "name": "mean_motion_dot",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mean_motion_ddot": {
+          "name": "mean_motion_ddot",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "element_set_no": {
+          "name": "element_set_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rev_at_epoch": {
+          "name": "rev_at_epoch",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "satellites_category_idx": {
+          "name": "satellites_category_idx",
+          "columns": [
+            {
+              "expression": "category",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {
+    "orbit": "orbit"
+  },
+  "views": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

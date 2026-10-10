@@ -1,0 +1,66 @@
+{
+  "name": "orbit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Live 3D globe of every active satellite, propagated in the browser from CelesTrak orbital data.",
+  "author": {
+    "name": "Jhon Rivero",
+    "url": "https://jhon.riverogz.com/"
+  },
+  "license": "MIT",
+  "homepage": "https://orbit.riverogz.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JhonRiv21/Orbit.git"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,mjs,json,css,md}": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1",
+    "drizzle-orm": "^0.45.3",
+    "next": "^16.4.0",
+    "postgres": "^3.4.9",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "satellite.js": "^6.0.2",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "dotenv": "^17.4.2",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.0",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.9",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3"
+  }
+}
