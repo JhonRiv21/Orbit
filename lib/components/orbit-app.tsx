@@ -12,12 +12,10 @@ import { useI18n, LanguageSelector } from "@/lib/components/i18n";
 import { CategoryLegend } from "@/lib/components/category-legend";
 import { SatelliteSearch } from "@/lib/components/satellite-search";
 import { SatelliteCard } from "@/lib/components/satellite-card";
-import { AboveMe } from "@/lib/components/above-me";
 import { FullscreenButton } from "@/lib/components/fullscreen-button";
 import { feedMeta, type SatelliteMeta } from "@/lib/globe/orbit-math";
 import { formatAgo, formatNumber } from "@/lib/utils/format";
-import type { Details, GlobeEngine, Sky } from "@/lib/globe/engine";
-import type { Observer } from "@/lib/globe/protocol";
+import type { Details, GlobeEngine } from "@/lib/globe/engine";
 import type { Category, SatelliteFeed } from "@/lib/types/satellite";
 
 type Status = "loading" | "ready" | "error";
@@ -31,11 +29,10 @@ export function OrbitApp() {
   const [attempt, setAttempt] = useState(0);
   const [meta, setMeta] = useState<SatelliteMeta[]>([]);
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
-  const [hidden, setHidden] = useState<Set<Category>>(new Set());
+  const [focus, setFocus] = useState<Category | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
   const [details, setDetails] = useState<Details | null>(null);
   const [hover, setHover] = useState<Hover>(null);
-  const [sky, setSky] = useState<Sky | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
 
   // The only effect: the 3D engine and its data live outside React.
@@ -64,7 +61,6 @@ export function OrbitApp() {
             setDetails(null);
           },
           onDetails: setDetails,
-          onSky: setSky,
         });
         engine.load(feed, list);
         engineRef.current = engine;
@@ -84,6 +80,17 @@ export function OrbitApp() {
     };
   }, [attempt]);
 
+  // The shell captions live in the 3D overlay, outside React: keep them in the
+  // current language once the engine exists.
+  useEffect(() => {
+    if (status === "ready")
+      engineRef.current?.setShellLabels([
+        t("shell.leo"),
+        t("shell.meo"),
+        t("shell.geo"),
+      ]);
+  }, [status, t]);
+
   const counts = useMemo(() => {
     const result = Object.fromEntries(CATEGORIES.map((c) => [c, 0])) as Record<
       Category,
@@ -93,14 +100,9 @@ export function OrbitApp() {
     return result;
   }, [meta]);
 
-  const toggleCategory = useCallback((category: Category) => {
-    setHidden((current) => {
-      const next = new Set(current);
-      if (next.has(category)) next.delete(category);
-      else next.add(category);
-      engineRef.current?.setFilter((m) => !next.has(m.category));
-      return next;
-    });
+  const changeFocus = useCallback((category: Category | null) => {
+    setFocus(category);
+    engineRef.current?.setFocus(category);
   }, []);
 
   const pick = useCallback((index: number) => {
@@ -109,11 +111,6 @@ export function OrbitApp() {
     setDetails(null);
     setPanelOpen(false);
   }, []);
-
-  const locate = useCallback(
-    (observer: Observer) => engineRef.current?.locate(observer),
-    [],
-  );
 
   const closeCard = useCallback(() => {
     engineRef.current?.select(null);
@@ -175,7 +172,8 @@ export function OrbitApp() {
 
         <div className="relative flex min-h-0 flex-1 gap-4 p-3 sm:p-4">
           <aside
-            className={`glass pointer-events-auto absolute inset-x-3 top-3 z-20 flex max-h-[calc(100%-1.5rem)] flex-col gap-5 overflow-y-auto rounded-2xl p-4 transition-transform duration-300 ease-out lg:static lg:w-80 lg:translate-x-0 ${
+            data-globe-occluder
+            className={`glass pointer-events-auto absolute inset-x-3 top-3 z-20 flex max-h-[calc(100%-1.5rem)] flex-col gap-5 overflow-y-auto rounded-2xl p-4 transition-transform duration-300 ease-out lg:static lg:w-80 lg:self-start lg:translate-x-0 ${
               panelOpen ? "translate-x-0" : "-translate-x-[110%]"
             }`}
           >
@@ -198,14 +196,8 @@ export function OrbitApp() {
                 <SatelliteSearch meta={meta} onPick={pick} />
                 <CategoryLegend
                   counts={counts}
-                  hidden={hidden}
-                  onToggle={toggleCategory}
-                />
-                <AboveMe
-                  meta={meta}
-                  sky={sky}
-                  onLocate={locate}
-                  onPick={pick}
+                  focus={focus}
+                  onFocus={changeFocus}
                 />
               </>
             )}
@@ -225,7 +217,7 @@ export function OrbitApp() {
         <footer className="flex shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 pb-3 text-[11px] text-muted">
           <span>{status === "ready" ? t("hint") : ""}</span>
           <span className="pointer-events-auto">
-            {t("brand.data")} ·{" "}
+            {t("brand.data")}{" "}
             <a
               href="https://jhon.riverogz.com/"
               target="_blank"

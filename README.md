@@ -8,7 +8,7 @@
 
 ## English
 
-A live 3D globe with every active satellite — more than 16,000 of them — moving in real time. Find the ISS, Hubble or a Starlink, see its orbit, and ask what is above you right now.
+A live 3D globe with every active satellite — more than 16,000 of them — moving in real time. Find the ISS, Hubble or a Starlink and follow its orbit.
 
 Nothing is simulated: positions come from the same orbital elements the U.S. Space Force publishes, propagated in your browser with SGP4, the model used to track satellites.
 
@@ -34,13 +34,13 @@ flowchart LR
 
 **A small payload.** The feed rounds every number to the precision of the TLE format itself and sends categories as indices, which brings 16k objects to about 680 KB compressed.
 
-**The real sky.** The day–night terminator follows the actual position of the Sun, and "What is above me?" computes, on the device, which satellites are over your horizon and when the ISS passes next. The location is never sent anywhere.
+**The real sky, explained.** The day–night terminator follows the actual position of the Sun. Satellites are drawn in three tiers — Starlink and other mega-constellations as faint dust that reveals the shells, purpose-built satellites in colour, and ten well-known landmarks with their names — and camera-facing rings mark low orbit, the GPS band and the geostationary belt. Choosing a group highlights it and leaves the rest as context.
 
 **Constant 30 fps.** A steady 30 looks smoother than a rate that alternates between 60 and 30, and it behaves the same on phones and weak GPUs.
 
 ### Security
 
-- Own CSP with `frame-ancestors 'none'` and `object-src 'none'`, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy` and a `Permissions-Policy` that only allows geolocation on this origin.
+- Own CSP with `frame-ancestors 'none'` and `object-src 'none'`, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy` and a `Permissions-Policy` that blocks geolocation, camera and microphone.
 - The ingest endpoint checks its secret from a header only, in **constant time** (`timingSafeEqual`).
 - Errors are logged on the server; clients get a generic message, and the public cron job discards response bodies.
 - Row Level Security is enabled on every table with no policies, so a stray grant can never expose the schema.
@@ -86,7 +86,7 @@ Built by **Jhon Rivero** — [GitHub](https://github.com/JhonRiv21) · [Portfoli
 
 ## Español
 
-Un globo 3D en vivo con todos los satélites activos —más de 16.000— moviéndose en tiempo real. Encuentra la ISS, el Hubble o un Starlink, mira su órbita y pregunta qué hay sobre ti en este momento.
+Un globo 3D en vivo con todos los satélites activos —más de 16.000— moviéndose en tiempo real. Encuentra la ISS, el Hubble o un Starlink y sigue su órbita.
 
 Nada es simulado: las posiciones salen de los mismos elementos orbitales que publica la Fuerza Espacial de EE. UU., propagados en tu navegador con SGP4, el modelo que se usa para rastrear satélites.
 
@@ -112,13 +112,13 @@ flowchart LR
 
 **Un payload pequeño.** El feed redondea cada número a la precisión del propio formato TLE y envía las categorías como índices, lo que deja 16 mil objetos en unos 680 KB comprimidos.
 
-**El cielo real.** El terminador entre el día y la noche sigue la posición real del Sol, y «¿Qué hay sobre mí?» calcula en el dispositivo qué satélites están sobre tu horizonte y cuándo pasa la ISS. La ubicación nunca se envía a ningún lado.
+**El cielo real, explicado.** El terminador entre el día y la noche sigue la posición real del Sol. Los satélites se dibujan en tres niveles —Starlink y otras megaconstelaciones como polvo tenue que revela las capas, los satélites con propósito en color y diez hitos conocidos con su nombre— y unos anillos que miran a la cámara marcan la órbita baja, la franja de GPS y el cinturón geoestacionario. Elegir un grupo lo resalta y deja el resto como contexto.
 
 **30 fps constantes.** Unos 30 estables se ven más fluidos que una tasa que alterna entre 60 y 30, y el globo se comporta igual en celulares y GPUs modestas.
 
 ### Seguridad
 
-- CSP propia con `frame-ancestors 'none'` y `object-src 'none'`, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy` y una `Permissions-Policy` que solo permite la geolocalización en este origen.
+- CSP propia con `frame-ancestors 'none'` y `object-src 'none'`, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy` y una `Permissions-Policy` que bloquea la geolocalización, la cámara y el micrófono.
 - El endpoint de ingesta valida su secreto solo por cabecera y en **tiempo constante** (`timingSafeEqual`).
 - Los errores se registran en el servidor; el cliente recibe un mensaje genérico y el job público del cron descarta el cuerpo de las respuestas.
 - Row Level Security activo en todas las tablas sin policies, para que un grant accidental nunca exponga el schema.

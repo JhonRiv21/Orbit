@@ -16,11 +16,11 @@ export function resolveLang(
 }
 
 export const MESSAGES = {
-  "brand.tagline": { en: "· live satellites", es: "· satélites en vivo" },
+  "brand.tagline": { en: "Live satellites", es: "Satélites en vivo" },
   "brand.credit": { en: "Built by", es: "Creado por" },
   "brand.data": {
-    en: "Orbital data: CelesTrak · Imagery: NASA",
-    es: "Datos orbitales: CelesTrak · Imágenes: NASA",
+    en: "Orbital data from CelesTrak, imagery from NASA.",
+    es: "Datos orbitales de CelesTrak, imágenes de la NASA.",
   },
 
   "lang.label": { en: "Language", es: "Idioma" },
@@ -50,15 +50,12 @@ export const MESSAGES = {
     es: "Elementos actualizados {ago}",
   },
   hint: {
-    en: "Drag to rotate · click a satellite",
-    es: "Arrastra para girar · toca un satélite",
+    en: "Drag to rotate, click a satellite to follow it.",
+    es: "Arrastra para girar y toca un satélite para seguirlo.",
   },
 
   "categories.title": { en: "What is up there", es: "Qué hay allá arriba" },
-  "categories.toggle": {
-    en: "Show or hide {label}",
-    es: "Mostrar u ocultar {label}",
-  },
+  "categories.toggle": { en: "Highlight {label}", es: "Resaltar {label}" },
   "category.starlink": { en: "Starlink", es: "Starlink" },
   "category.comms": { en: "Communications", es: "Comunicaciones" },
   "category.navigation": {
@@ -70,10 +67,16 @@ export const MESSAGES = {
   "category.science": { en: "Science", es: "Ciencia" },
   "category.other": { en: "Other", es: "Otros" },
 
-  "orbit.leo": { en: "Low Earth orbit", es: "Órbita baja" },
-  "orbit.meo": { en: "Medium Earth orbit", es: "Órbita media" },
-  "orbit.geo": { en: "Geostationary", es: "Geoestacionaria" },
-  "orbit.heo": { en: "Highly elliptical", es: "Muy elíptica" },
+  "orbit.leo": { en: "in low Earth orbit", es: "en órbita baja" },
+  "orbit.meo": { en: "in medium Earth orbit", es: "en órbita media" },
+  "orbit.geo": {
+    en: "in geostationary orbit",
+    es: "en órbita geoestacionaria",
+  },
+  "orbit.heo": {
+    en: "in a highly elliptical orbit",
+    es: "en órbita muy elíptica",
+  },
 
   "search.label": { en: "Search a satellite", es: "Buscar un satélite" },
   "search.placeholder": {
@@ -92,32 +95,26 @@ export const MESSAGES = {
   "detail.norad": { en: "NORAD ID", es: "ID NORAD" },
   "detail.elements": { en: "Elements from {ago}", es: "Elementos de {ago}" },
 
-  "above.button": { en: "What is above me?", es: "¿Qué hay sobre mí?" },
-  "above.locating": { en: "Locating…", es: "Ubicando…" },
-  "above.denied": {
-    en: "Location unavailable. Allow it in the browser to try again.",
-    es: "Ubicación no disponible. Permítela en el navegador para intentarlo de nuevo.",
+  "categories.hint": {
+    en: "Choose a group to see where it flies.",
+    es: "Elige un grupo para ver por dónde vuela.",
   },
-  "above.privacy": {
-    en: "Your location never leaves this device.",
-    es: "Tu ubicación nunca sale de este dispositivo.",
+  "categories.all": { en: "Show all", es: "Ver todos" },
+  "shell.leo": {
+    en: "Low orbit, up to 2,000 km",
+    es: "Órbita baja, hasta 2.000 km",
   },
-  "above.count": {
-    en: "{count} satellites above your horizon right now",
-    es: "{count} satélites sobre tu horizonte en este momento",
+  "shell.meo": {
+    en: "GPS and Galileo, 20,200 km",
+    es: "GPS y Galileo, 20.200 km",
   },
-  "above.highest": {
-    en: "Highest in your sky",
-    es: "Los más altos en tu cielo",
+  "shell.geo": {
+    en: "Geostationary belt, 35,786 km",
+    es: "Cinturón geoestacionario, 35.786 km",
   },
-  "above.iss": { en: "Next ISS pass", es: "Próximo paso de la ISS" },
-  "above.issWhen": {
-    en: "{time} · up to {elevation}° high",
-    es: "{time} · hasta {elevation}° de altura",
-  },
-  "above.issNone": {
-    en: "No ISS pass above 10° in the next 24 h.",
-    es: "Sin pasos de la ISS sobre 10° en las próximas 24 h.",
+  "detail.illustration": {
+    en: "Illustration of this kind of satellite.",
+    es: "Ilustración de este tipo de satélite",
   },
 } as const satisfies Record<string, Record<Lang, string>>;
 

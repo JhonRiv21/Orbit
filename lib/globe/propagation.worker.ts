@@ -4,30 +4,18 @@ import {
   gstime,
   eciToEcf,
   eciToGeodetic,
-  ecfToLookAngles,
-  degreesToRadians,
   radiansToDegrees,
   type SatRec,
 } from "satellite.js";
 import { EARTH_RADIUS_KM, satrecOf } from "./orbit-math";
-import type {
-  Observer,
-  SkyObject,
-  WorkerRequest,
-  WorkerResponse,
-} from "./protocol";
+import type { WorkerRequest, WorkerResponse } from "./protocol";
 
 // SGP4 for every object runs here, off the main thread: ~16k propagations a
 // second would otherwise cost the globe frames.
 
-const ISS_NORAD = 25544;
-const MIN_PASS_ELEVATION = 10;
-const PASS_SEARCH_H = 24;
-const PASS_STEP_S = 30;
 const ORBIT_SAMPLES = 256;
 
 let satrecs: (SatRec | null)[] = [];
-let issIndex = -1;
 
 const post = (message: WorkerResponse, transfer: Transferable[] = []) =>
   (self as DedicatedWorkerGlobalScope).postMessage(message, transfer);
@@ -114,71 +102,6 @@ function details(index: number, time: number) {
   });
 }
 
-function lookFrom(observer: Observer) {
-  return {
-    latitude: degreesToRadians(observer.latDeg),
-    longitude: degreesToRadians(observer.lonDeg),
-    height: 0,
-  };
-}
-
-function sky(observer: Observer, time: number) {
-  const date = new Date(time);
-  const gmst = gstime(date);
-  const site = lookFrom(observer);
-  const above: SkyObject[] = [];
-  satrecs.forEach((satrec, index) => {
-    const eci = satrec && eciAt(satrec, date);
-    if (!eci) return;
-    const look = ecfToLookAngles(site, eciToEcf(eci, gmst));
-    if (look.elevation <= 0) return;
-    above.push({
-      index,
-      elevationDeg: radiansToDegrees(look.elevation),
-      azimuthDeg: radiansToDegrees(look.azimuth),
-      rangeKm: look.rangeSat,
-    });
-  });
-  above.sort((a, b) => b.elevationDeg - a.elevationDeg);
-  post({
-    type: "sky",
-    overhead: above.length,
-    highest: above.slice(0, 8),
-    issPass: issPass(site, time),
-  });
-}
-
-// Next window where the ISS climbs above 10° over the observer.
-function issPass(site: ReturnType<typeof lookFrom>, from: number) {
-  const satrec = satrecs[issIndex];
-  if (!satrec) return null;
-  let rise = 0;
-  let peak = 0;
-  let maxElevation = -90;
-  for (
-    let t = from;
-    t < from + PASS_SEARCH_H * 3_600_000;
-    t += PASS_STEP_S * 1000
-  ) {
-    const date = new Date(t);
-    const eci = eciAt(satrec, date);
-    if (!eci) return null;
-    const elevation = radiansToDegrees(
-      ecfToLookAngles(site, eciToEcf(eci, gstime(date))).elevation,
-    );
-    if (elevation >= MIN_PASS_ELEVATION) {
-      if (!rise) rise = t;
-      if (elevation > maxElevation) {
-        maxElevation = elevation;
-        peak = t;
-      }
-    } else if (rise) {
-      return { rise, peak, set: t, maxElevationDeg: maxElevation };
-    }
-  }
-  return null;
-}
-
 self.onmessage = (event: MessageEvent<WorkerRequest>) => {
   const message = event.data;
   switch (message.type) {
@@ -190,7 +113,6 @@ self.onmessage = (event: MessageEvent<WorkerRequest>) => {
           return null; // malformed elements: that object is simply not drawn
         }
       });
-      issIndex = message.feed.satellites.findIndex((t) => t[0] === ISS_NORAD);
       post({ type: "ready", count: satrecs.length });
       break;
     case "positions":
@@ -201,9 +123,6 @@ self.onmessage = (event: MessageEvent<WorkerRequest>) => {
       break;
     case "details":
       details(message.index, message.time);
-      break;
-    case "sky":
-      sky(message.observer, message.time);
       break;
   }
 };

@@ -48,3 +48,32 @@ export const CATEGORY_COLORS: Record<Category, string> = {
   science: "#c48bff",
   other: "#b9c2cf",
 };
+
+// Visual weight per category: [point size, opacity]. The two mega-groups are
+// dust that shows the shape of the shells; the rest are drawn as objects.
+export const CATEGORY_WEIGHT: Record<Category, [number, number]> = {
+  starlink: [1.1, 0.55],
+  other: [1.2, 0.6],
+  comms: [1.8, 0.9],
+  earth: [1.9, 0.95],
+  navigation: [2.6, 1],
+  science: [2.6, 1],
+  stations: [3, 1],
+};
+
+// Labelled on the globe, in order of how widely known they are: that order
+// decides which label stays when two overlap. All fly in low orbit, close to
+// the planet: a label far out (GPS, geostationary) swings across the screen
+// whenever the globe turns. Found by catalogue name.
+export const LANDMARKS: { name: string; label: string }[] = [
+  { name: "ISS (ZARYA)", label: "ISS" },
+  { name: "CSS (TIANHE)", label: "Tiangong" },
+  { name: "HST", label: "Hubble" },
+  { name: "LANDSAT 9", label: "Landsat 9" },
+  { name: "TERRA", label: "Terra" },
+  { name: "AQUA", label: "Aqua" },
+  { name: "SENTINEL-6A", label: "Sentinel-6" },
+  { name: "SUOMI NPP", label: "Suomi NPP" },
+  { name: "NOAA 21 (JPSS-2)", label: "NOAA 21" },
+  { name: "ICESAT-2", label: "ICESat-2" },
+];

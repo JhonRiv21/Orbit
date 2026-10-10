@@ -35,10 +35,7 @@ export function SatelliteSearch({ meta, onPick }: Props) {
 
   return (
     <section>
-      <label
-        htmlFor="sat-search"
-        className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.14em] text-muted"
-      >
+      <label htmlFor="sat-search" className="mb-2 block text-sm font-medium">
         {t("search.label")}
       </label>
       <input
@@ -74,7 +71,7 @@ export function SatelliteSearch({ meta, onPick }: Props) {
                   style={{ background: CATEGORY_COLORS[meta[i].category] }}
                 />
                 <span className="flex-1 truncate">{meta[i].name}</span>
-                <span className="font-mono text-[11px] text-muted">
+                <span className="text-[11px] tabular-nums text-muted">
                   {meta[i].noradId}
                 </span>
               </button>

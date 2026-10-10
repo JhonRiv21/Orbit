@@ -28,10 +28,9 @@ const SECURITY_HEADERS = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-  // Geolocation only for "what is above me", asked on a button press.
   {
     key: "Permissions-Policy",
-    value: "geolocation=(self), fullscreen=(self), camera=(), microphone=()",
+    value: "geolocation=(), fullscreen=(self), camera=(), microphone=()",
   },
 ];
 

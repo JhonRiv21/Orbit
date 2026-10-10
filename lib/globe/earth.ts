@@ -21,10 +21,16 @@ const FRAGMENT = /* glsl */ `
   varying vec2 vUv;
   varying vec3 vNormal;
   void main() {
+    vec3 albedo = texture2D(dayMap, vUv).rgb;
     float light = dot(normalize(vNormal), sunDirection);
-    float day = smoothstep(-0.12, 0.18, light);
-    vec3 dayColor = texture2D(dayMap, vUv).rgb * (0.35 + 0.75 * max(light, 0.0));
-    vec3 nightColor = texture2D(nightMap, vUv).rgb * vec3(1.0, 0.82, 0.55) * 1.4 + vec3(0.006, 0.01, 0.025);
+    // Wide, soft terminator: twilight spans a band instead of a hard edge.
+    float day = smoothstep(-0.28, 0.32, light);
+    vec3 dayColor = albedo * (0.62 + 0.55 * max(light, 0.0));
+    // The night side stays readable: the same continents under moonlight,
+    // with the city lights on top, instead of a near-black disc.
+    vec3 moonlit = albedo * vec3(0.30, 0.36, 0.52);
+    vec3 cities = texture2D(nightMap, vUv).rgb * vec3(1.0, 0.8, 0.5) * 1.6;
+    vec3 nightColor = moonlit + cities;
     gl_FragColor = vec4(mix(nightColor, dayColor, day), 1.0);
     #include <colorspace_fragment>
   }
@@ -37,7 +43,7 @@ const ATMOSPHERE_FRAGMENT = /* glsl */ `
   void main() {
     float rim = pow(1.0 - abs(dot(normalize(vNormal), normalize(vView))), 3.0);
     float lit = 0.35 + 0.65 * smoothstep(-0.3, 0.4, dot(normalize(vNormal), sunDirection));
-    gl_FragColor = vec4(vec3(0.33, 0.6, 1.0) * rim * lit, rim * lit);
+    gl_FragColor = vec4(vec3(0.38, 0.66, 1.0) * rim * lit * 1.25, rim * lit);
   }
 `;
 

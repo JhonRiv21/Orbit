@@ -22,14 +22,6 @@ export function formatNumber(value: number, lang: Lang, digits = 0): string {
   });
 }
 
-export function formatClock(timeMs: number, lang: Lang): string {
-  return new Date(timeMs).toLocaleString(locale(lang), {
-    weekday: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
 export function formatLatLon(latDeg: number, lonDeg: number): string {
   const lat = `${Math.abs(latDeg).toFixed(1)}° ${latDeg >= 0 ? "N" : "S"}`;
   const lon = `${Math.abs(lonDeg).toFixed(1)}° ${lonDeg >= 0 ? "E" : "W"}`;

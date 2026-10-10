@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Orbit — every active satellite, live",
   description:
-    "Live 3D globe of the more than 16,000 active satellites, propagated in your browser from CelesTrak orbital data. Find the ISS, Starlink or GPS, and see what is above you right now.",
+    "Live 3D globe of the more than 16,000 active satellites, propagated in your browser from CelesTrak orbital data. Find the ISS, Hubble or Starlink and follow its orbit.",
   authors: [{ name: "Jhon Rivero", url: "https://jhon.riverogz.com/" }],
 };
 

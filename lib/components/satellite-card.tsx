@@ -1,6 +1,7 @@
 "use client";
 
 import { CATEGORY_COLORS } from "@/lib/assets/categories";
+import { SatelliteIllustration } from "@/lib/components/satellite-illustration";
 import { useI18n } from "@/lib/components/i18n";
 import { orbitFigures, type SatelliteMeta } from "@/lib/globe/orbit-math";
 import { formatAgo, formatLatLon, formatNumber } from "@/lib/utils/format";
@@ -40,7 +41,10 @@ export function SatelliteCard({ meta, details, onClose }: Props) {
   ];
 
   return (
-    <article className="glass pointer-events-auto w-full rounded-2xl p-4 sm:w-80">
+    <article
+      data-globe-occluder
+      className="glass pointer-events-auto w-full rounded-2xl p-4 sm:w-80"
+    >
       <header className="mb-3 flex items-start gap-3">
         <span
           className="mt-1.5 h-3 w-3 shrink-0 rounded-full"
@@ -54,7 +58,7 @@ export function SatelliteCard({ meta, details, onClose }: Props) {
             {meta.name}
           </h2>
           <p className="text-xs text-muted">
-            {t(`category.${meta.category}`)} · {t(`orbit.${meta.orbitClass}`)}
+            {t(`category.${meta.category}`)} {t(`orbit.${meta.orbitClass}`)}
           </p>
         </div>
         <button
@@ -66,6 +70,17 @@ export function SatelliteCard({ meta, details, onClose }: Props) {
           ✕
         </button>
       </header>
+      <figure className="mb-3">
+        <div className="surface h-24 rounded-xl px-3 py-2">
+          <SatelliteIllustration
+            category={meta.category}
+            color={CATEGORY_COLORS[meta.category]}
+          />
+        </div>
+        <figcaption className="mt-1 text-[11px] text-muted">
+          {t("detail.illustration")}
+        </figcaption>
+      </figure>
       <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5">
         {rows.map(([label, value]) => (
           <div
@@ -74,10 +89,8 @@ export function SatelliteCard({ meta, details, onClose }: Props) {
               label === t("detail.position") ? "col-span-2" : undefined
             }
           >
-            <dt className="text-[11px] uppercase tracking-wider text-muted">
-              {label}
-            </dt>
-            <dd className="font-mono text-sm tabular-nums">{value}</dd>
+            <dt className="text-xs text-muted">{label}</dt>
+            <dd className="text-sm font-medium tabular-nums">{value}</dd>
           </div>
         ))}
       </dl>
