@@ -13,6 +13,7 @@ import { CategoryLegend } from "@/lib/components/category-legend";
 import { SatelliteSearch } from "@/lib/components/satellite-search";
 import { SatelliteCard } from "@/lib/components/satellite-card";
 import { FullscreenButton } from "@/lib/components/fullscreen-button";
+import { ZoomControls } from "@/lib/components/zoom-controls";
 import { feedMeta, type SatelliteMeta } from "@/lib/globe/orbit-math";
 import { formatAgo, formatNumber } from "@/lib/utils/format";
 import type { Details, GlobeEngine } from "@/lib/globe/engine";
@@ -112,6 +113,11 @@ export function OrbitApp() {
     setPanelOpen(false);
   }, []);
 
+  const zoom = useCallback(
+    (factor: number) => engineRef.current?.zoom(factor),
+    [],
+  );
+
   const closeCard = useCallback(() => {
     engineRef.current?.select(null);
     setSelected(null);
@@ -171,6 +177,11 @@ export function OrbitApp() {
         </header>
 
         <div className="relative flex min-h-0 flex-1 gap-4 p-3 sm:p-4">
+          {status === "ready" && (
+            <div className="absolute right-3 top-3 z-20 sm:right-4 sm:top-4">
+              <ZoomControls onZoom={zoom} />
+            </div>
+          )}
           <aside
             data-globe-occluder
             className={`glass pointer-events-auto absolute inset-x-3 top-3 z-20 flex max-h-[calc(100%-1.5rem)] flex-col gap-5 overflow-y-auto rounded-2xl p-4 transition-transform duration-300 ease-out lg:static lg:w-80 lg:self-start lg:translate-x-0 ${

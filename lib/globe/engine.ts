@@ -216,6 +216,22 @@ export class GlobeEngine {
     }
   }
 
+  // On-screen zoom buttons: a short glide towards or away from whatever the
+  // camera orbits (the Earth, or the followed satellite), within the limits
+  // the wheel already has.
+  zoom(factor: number) {
+    const offset = this.camera.position.clone().sub(this.controls.target);
+    const min = this.follow !== null ? 0.06 : this.controls.minDistance;
+    offset.setLength(
+      THREE.MathUtils.clamp(
+        offset.length() * factor,
+        min,
+        this.controls.maxDistance,
+      ),
+    );
+    this.flyTo(offset, 450, false);
+  }
+
   setShellLabels(texts: string[]) {
     texts.forEach((text, i) => {
       if (this.shellLabels[i]) this.shellLabels[i].textContent = text;

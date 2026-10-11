@@ -113,9 +113,12 @@ export const MESSAGES = {
     es: "Cinturón geoestacionario, 35.786 km",
   },
   "detail.illustration": {
-    en: "Illustration of this kind of satellite.",
-    es: "Ilustración de este tipo de satélite",
+    en: "Illustration of this kind of satellite, not the object itself.",
+    es: "Ilustración de este tipo de satélite, no del objeto en sí.",
   },
+  "zoom.label": { en: "Zoom", es: "Zoom" },
+  "zoom.in": { en: "Zoom in", es: "Acercar" },
+  "zoom.out": { en: "Zoom out", es: "Alejar" },
 } as const satisfies Record<string, Record<Lang, string>>;
 
 export type MessageKey = keyof typeof MESSAGES;
