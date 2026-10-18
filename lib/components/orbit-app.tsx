@@ -233,10 +233,10 @@ export function OrbitApp() {
               href="https://jhon.riverogz.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-accent"
+              className="block transition-colors hover:text-accent sm:inline"
             >
               {t("brand.credit")}{" "}
-              <span className="font-medium text-foreground/80">
+              <span className="font-medium transition-colors hover:text-accent text-foreground/80">
                 Jhon Rivero
               </span>
             </a>
